@@ -12,7 +12,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
-        // XposedBridge stub — compile-only, provided by LSPosed at runtime
+        maven("https://api.xposed.info/")  // XposedBridge compile-only stub
     }
 }
 

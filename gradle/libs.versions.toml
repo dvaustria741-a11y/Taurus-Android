@@ -21,7 +21,7 @@ androidx-navigation-compose    = { group = "androidx.navigation",        name = 
 
 okio       = { group = "com.squareup.okio",  name = "okio",          version = "3.9.0" }
 # XposedBridge stub — compile-only, provided by LSPosed at runtime.
-xposed-api = { group = "com.github.rovo89", name = "XposedBridge", version = "89" }
+xposed-api = { group = "de.robv.android.xposed", name = "api", version = "82" }
 
 [plugins]
 android-application = { id = "com.android.application",          version.ref = "agp" }
