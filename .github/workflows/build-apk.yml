@@ -32,6 +32,7 @@ jobs:
           gradle-version: "8.10.2"
 
       - name: Build debug APK
+        shell: bash
         run: gradle assembleDebug --stacktrace --console=plain 2>&1 | tee -a build.log
 
       - name: Decode keystore (only when secrets exist)
@@ -49,6 +50,7 @@ jobs:
           fi
 
       - name: Build release APK
+        shell: bash
         run: gradle assembleRelease --stacktrace --console=plain 2>&1 | tee -a build.log
 
       - name: Surface Gradle errors as annotations
@@ -62,12 +64,14 @@ jobs:
           name: taurus-debug-${{ github.sha }}
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+          if-no-files-found: error
 
       - uses: actions/upload-artifact@v4
         with:
           name: taurus-release-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
           retention-days: 30
+          if-no-files-found: error
 
       - name: GitHub Release (tags only)
         if: startsWith(github.ref, 'refs/tags/')
