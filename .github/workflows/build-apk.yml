@@ -31,9 +31,9 @@ jobs:
         with:
           gradle-version: "8.10.2"
 
-      - name: Build debug APK
+      - name: Build debug APKs (app + xposed)
         shell: bash
-        run: gradle assembleDebug --stacktrace --console=plain 2>&1 | tee -a build.log
+        run: gradle :app:assembleDebug :xposed:assembleDebug --stacktrace --console=plain 2>&1 | tee -a build.log
 
       - name: Decode keystore (only when secrets exist)
         env:
@@ -46,12 +46,12 @@ jobs:
             echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> "$GITHUB_ENV"
             echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> "$GITHUB_ENV"
           else
-            echo "No keystore secrets, release APK will use the debug key."
+            echo "No keystore secrets — release APKs will use the debug key."
           fi
 
-      - name: Build release APK
+      - name: Build release APKs (app + xposed)
         shell: bash
-        run: gradle assembleRelease --stacktrace --console=plain 2>&1 | tee -a build.log
+        run: gradle :app:assembleRelease :xposed:assembleRelease --stacktrace --console=plain 2>&1 | tee -a build.log
 
       - name: Surface Gradle errors as annotations
         if: failure()
@@ -59,17 +59,33 @@ jobs:
           msg=$(grep -E "^e: |What went wrong|error:|Could not|Unresolved|FAILED" -A2 build.log | head -60 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
           echo "::error title=Gradle::$msg"
 
+      # ── app (companion / UI) ──────────────────────────────────────────────────
       - uses: actions/upload-artifact@v4
         with:
-          name: taurus-debug-${{ github.sha }}
+          name: taurus-app-debug-${{ github.sha }}
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
           if-no-files-found: error
 
       - uses: actions/upload-artifact@v4
         with:
-          name: taurus-release-${{ github.sha }}
+          name: taurus-app-release-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      # ── xposed module (LSPosed hook) ───────────────────────────────────────────
+      - uses: actions/upload-artifact@v4
+        with:
+          name: taurus-xposed-debug-${{ github.sha }}
+          path: xposed/build/outputs/apk/debug/*.apk
+          retention-days: 14
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: taurus-xposed-release-${{ github.sha }}
+          path: xposed/build/outputs/apk/release/*.apk
           retention-days: 30
           if-no-files-found: error
 
@@ -77,5 +93,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/release/*.apk
+          files: |
+            app/build/outputs/apk/release/*.apk
+            xposed/build/outputs/apk/release/*.apk
           generate_release_notes: true

@@ -19,7 +19,12 @@ androidx-ui-tooling-preview    = { group = "androidx.compose.ui",        name = 
 androidx-material3             = { group = "androidx.compose.material3", name = "material3" }
 androidx-navigation-compose    = { group = "androidx.navigation",        name = "navigation-compose",    version.ref = "navigationCompose" }
 
+okio       = { group = "com.squareup.okio",  name = "okio",          version = "3.9.0" }
+# XposedBridge stub — compile-only, provided by LSPosed at runtime.
+xposed-api = { group = "com.github.rovo89", name = "XposedBridge", version = "89" }
+
 [plugins]
 android-application = { id = "com.android.application",          version.ref = "agp" }
+android-library     = { id = "com.android.library",              version.ref = "agp" }
 kotlin-android      = { id = "org.jetbrains.kotlin.android",     version.ref = "kotlin" }
 kotlin-compose      = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

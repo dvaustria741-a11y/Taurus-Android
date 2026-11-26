@@ -11,8 +11,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
+        // XposedBridge stub — compile-only, provided by LSPosed at runtime
     }
 }
 
 rootProject.name = "Taurus"
 include(":app")
+include(":xposed")
