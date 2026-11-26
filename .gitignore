@@ -18,3 +18,15 @@ tweak/Sources/Shared/Flags/SGFlagList.m
 harness/*/build/
 vendor/*/build/
 /video
+
+# Android
+.gradle/
+.idea/
+*.iml
+local.properties
+app/build/
+build/
+captures/
+.cxx/
+*.jks
+*.keystore

@@ -1,0 +1,4 @@
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes EnclosingMethod
+-dontwarn androidx.compose.**
